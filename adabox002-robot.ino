@@ -137,6 +137,7 @@ void loop( void ) {
 
 void updateRobot() {
   unsigned long currentTime = millis();
+
 /*
   Serial.println( "***************" );
   Serial.print( "LeftSpeed  " );
@@ -152,6 +153,7 @@ void updateRobot() {
   Serial.print( " turnStatus " );
   Serial.println( turnStatus );
 */
+
   if ( GO_NONE == currentGoLeft && GO_NONE == currentGoRight ) {
     digitalWrite( STOP_LIGHT, HIGH );
     digitalWrite( GO_LIGHT, LOW );
@@ -203,10 +205,8 @@ void updateRobot() {
       }
     } else {
       if ( TURN_RIGHT == turnStatus ) {
-        desiredSpeedRight *= 0.5;
         desiredSpeedLeft = 0;
       } else if ( TURN_LEFT == turnStatus ) {
-        desiredSpeedLeft *= 0.5;
         desiredSpeedRight = 0;
       } else {
         desiredSpeedLeft = 0;
@@ -214,34 +214,47 @@ void updateRobot() {
       }
     }
 
-    int newSpeedLeft;
-    int newSpeedRight;
+/*
+    Serial.print( "Desired LeftSpeed  " );
+    Serial.println( desiredSpeedLeft );
+    Serial.print( "Desired RightSpeed  " );
+    Serial.println( desiredSpeedRight );
+*/
 
-    if ( desiredSpeedLeft < currentSpeedLeft ) {
-      newSpeedLeft = max( currentSpeedLeft - SPEED_CHANGE, desiredSpeedLeft );
-    } else if ( desiredSpeedLeft > currentSpeedLeft ) {
-      newSpeedLeft = min( currentSpeedLeft + SPEED_CHANGE, desiredSpeedLeft );
+    if ( desiredSpeedLeft != currentSpeedLeft ) {
+      int newSpeedLeft;
+
+      if ( desiredSpeedLeft < currentSpeedLeft ) {
+        newSpeedLeft = max( currentSpeedLeft - SPEED_CHANGE, desiredSpeedLeft );
+      } else {
+        newSpeedLeft = min( currentSpeedLeft + SPEED_CHANGE, desiredSpeedLeft );
+      }
+
+      L_MOTOR->setSpeed( newSpeedLeft );
+      currentSpeedLeft = newSpeedLeft;
+
+      if ( 0 == currentSpeedLeft ) {
+        L_MOTOR->run( RELEASE );
+        currentGoLeft = GO_NONE;
+      }
     }
 
-    if ( desiredSpeedRight < currentSpeedRight ) {
-      newSpeedRight = max( currentSpeedRight - SPEED_CHANGE, desiredSpeedRight );
-    } else if ( desiredSpeedRight > currentSpeedRight ) {
-      newSpeedRight = min( currentSpeedRight + SPEED_CHANGE, desiredSpeedRight );
-    }
+    if ( desiredSpeedRight != currentSpeedRight ) {
+      int newSpeedRight;
 
-    L_MOTOR->setSpeed( newSpeedLeft );
-    R_MOTOR->setSpeed( newSpeedRight );
-    currentSpeedLeft  = newSpeedLeft;
-    currentSpeedRight = newSpeedRight;
+      if ( desiredSpeedRight < currentSpeedRight ) {
+        newSpeedRight = max( currentSpeedRight - SPEED_CHANGE, desiredSpeedRight );
+      } else {
+        newSpeedRight = min( currentSpeedRight + SPEED_CHANGE, desiredSpeedRight );
+      }
 
-    if ( 0 == currentSpeedLeft ) {
-      L_MOTOR->run( RELEASE );
-      currentGoLeft = GO_NONE;
-    }
-    
-    if ( 0 == currentSpeedRight ) {
-      R_MOTOR->run( RELEASE );
-      currentGoRight = GO_NONE;
+      R_MOTOR->setSpeed( newSpeedRight );
+      currentSpeedRight = newSpeedRight;
+
+      if ( 0 == currentSpeedRight ) {
+        R_MOTOR->run( RELEASE );
+        currentGoRight = GO_NONE;
+      }
     }
 
     previousUpdate = currentTime;
