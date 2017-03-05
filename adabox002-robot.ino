@@ -214,25 +214,25 @@ void updateRobot() {
       }
     }
 
-    int newLeftSpeed;
-    int newRightSpeed;
+    int newSpeedLeft;
+    int newSpeedRight;
 
     if ( desiredLeftSpeed < currentSpeedLeft ) {
-      newLeftSpeed = max( currentSpeedLeft - SPEED_CHANGE, desiredLeftSpeed );
+      newSpeedLeft = max( currentSpeedLeft - SPEED_CHANGE, desiredLeftSpeed );
     } else {
-      newLeftSpeed = min( currentSpeedLeft + SPEED_CHANGE, desiredLeftSpeed );
+      newSpeedLeft = min( currentSpeedLeft + SPEED_CHANGE, desiredLeftSpeed );
     }
 
     if ( desiredRightSpeed < currentSpeedRight ) {
-      newRightSpeed = max( currentSpeedRight - SPEED_CHANGE, desiredRightSpeed );
+      newSpeedRight = max( currentSpeedRight - SPEED_CHANGE, desiredRightSpeed );
     } else {
-      newRightSpeed = min( currentSpeedRight + SPEED_CHANGE, desiredRightSpeed );
+      newSpeedRight = min( currentSpeedRight + SPEED_CHANGE, desiredRightSpeed );
     }
 
-    L_MOTOR->setSpeed( newLeftSpeed );
-    R_MOTOR->setSpeed( newRightSpeed );
-    currentSpeedLeft  = newLeftSpeed;
-    currentSpeedRight = newRightSpeed;
+    L_MOTOR->setSpeed( newSpeedLeft );
+    R_MOTOR->setSpeed( newSpeedRight );
+    currentSpeedLeft  = newSpeedLeft;
+    currentSpeedRight = newSpeedRight;
 
     if ( 0 == currentSpeedLeft ) {
       L_MOTOR->run( RELEASE );
