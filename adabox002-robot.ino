@@ -175,58 +175,58 @@ void updateRobot() {
     }
   }
 
-  int desiredLeftSpeed = getSpeed();
-  int desiredRightSpeed = getSpeed();
+  int desiredSpeedLeft  = getSpeed();
+  int desiredSpeedRight = getSpeed();
 
   if ( ( currentTime - previousUpdate ) >= UPDATE_ROBOT_TIME ) {
     if ( GO_FORWARD == goStatus ) {
       if ( GO_REVERSE == currentGoLeft || GO_REVERSE == currentGoRight ) {
-        desiredLeftSpeed = 0;
-        desiredRightSpeed = 0;
+        desiredSpeedLeft = 0;
+        desiredSpeedRight = 0;
       } else {
         if ( TURN_RIGHT == turnStatus ) {
-          desiredRightSpeed *= 0.5;
+          desiredSpeedRight *= 0.5;
         } else if ( TURN_LEFT == turnStatus ) {
-          desiredLeftSpeed *= 0.5;
+          desiredSpeedLeft *= 0.5;
         }
       }
     } else if ( GO_REVERSE == goStatus ) {
       if ( GO_FORWARD == currentGoLeft || GO_FORWARD == currentGoRight ) {
-        desiredLeftSpeed = 0;
-        desiredRightSpeed = 0;
+        desiredSpeedLeft = 0;
+        desiredSpeedRight = 0;
       } else {
         if ( TURN_RIGHT == turnStatus ) {
-          desiredLeftSpeed *= 0.5;
+          desiredSpeedLeft *= 0.5;
         } else if ( TURN_LEFT == turnStatus ) {
-          desiredRightSpeed *= 0.5;
+          desiredSpeedRight *= 0.5;
         }
       }
     } else {
       if ( TURN_RIGHT == turnStatus ) {
-        desiredRightSpeed *= 0.5;
-        desiredLeftSpeed = 0;
+        desiredSpeedRight *= 0.5;
+        desiredSpeedLeft = 0;
       } else if ( TURN_LEFT == turnStatus ) {
-        desiredLeftSpeed *= 0.5;
-        desiredRightSpeed = 0;
+        desiredSpeedLeft *= 0.5;
+        desiredSpeedRight = 0;
       } else {
-        desiredLeftSpeed = 0;
-        desiredRightSpeed = 0;
+        desiredSpeedLeft = 0;
+        desiredSpeedRight = 0;
       }
     }
 
     int newSpeedLeft;
     int newSpeedRight;
 
-    if ( desiredLeftSpeed < currentSpeedLeft ) {
-      newSpeedLeft = max( currentSpeedLeft - SPEED_CHANGE, desiredLeftSpeed );
-    } else {
-      newSpeedLeft = min( currentSpeedLeft + SPEED_CHANGE, desiredLeftSpeed );
+    if ( desiredSpeedLeft < currentSpeedLeft ) {
+      newSpeedLeft = max( currentSpeedLeft - SPEED_CHANGE, desiredSpeedLeft );
+    } else if ( desiredSpeedLeft > currentSpeedLeft ) {
+      newSpeedLeft = min( currentSpeedLeft + SPEED_CHANGE, desiredSpeedLeft );
     }
 
-    if ( desiredRightSpeed < currentSpeedRight ) {
-      newSpeedRight = max( currentSpeedRight - SPEED_CHANGE, desiredRightSpeed );
-    } else {
-      newSpeedRight = min( currentSpeedRight + SPEED_CHANGE, desiredRightSpeed );
+    if ( desiredSpeedRight < currentSpeedRight ) {
+      newSpeedRight = max( currentSpeedRight - SPEED_CHANGE, desiredSpeedRight );
+    } else if ( desiredSpeedRight > currentSpeedRight ) {
+      newSpeedRight = min( currentSpeedRight + SPEED_CHANGE, desiredSpeedRight );
     }
 
     L_MOTOR->setSpeed( newSpeedLeft );
