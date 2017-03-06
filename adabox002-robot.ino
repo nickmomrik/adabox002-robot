@@ -162,16 +162,15 @@ void updateRobot() {
   }
   
   if ( 0 == currentSpeedLeft && 0 == currentSpeedRight ) {
+    digitalWrite( GO_LIGHT, LOW );
+    digitalWrite( STOP_LIGHT, HIGH );
+
     if ( GO_REVERSE == goStatus ) {
-      digitalWrite( GO_LIGHT, LOW );
-      digitalWrite( STOP_LIGHT, HIGH );
       L_MOTOR->run( BACKWARD );
       R_MOTOR->run( BACKWARD );
       currentGoLeft  = GO_REVERSE;
       currentGoRight = GO_REVERSE;
     } else {
-      digitalWrite( GO_LIGHT, HIGH );
-      digitalWrite( STOP_LIGHT, LOW );
       L_MOTOR->run( FORWARD );
       R_MOTOR->run( FORWARD );
       currentGoLeft  = GO_FORWARD;
@@ -261,6 +260,11 @@ void updateRobot() {
       }
 
       delay( 10 );
+    }
+
+    if ( GO_REVERSE != goStatus && ( currentSpeedRight > 0 || currentSpeedLeft > 0 ) ) {
+      digitalWrite( GO_LIGHT, HIGH );
+      digitalWrite( STOP_LIGHT, LOW );
     }
 
     previousUpdate = currentTime;
