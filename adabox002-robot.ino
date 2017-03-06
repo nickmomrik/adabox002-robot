@@ -45,8 +45,9 @@ Adafruit_BluefruitLE_SPI ble( BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI
 #define TURN_NONE  0
 #define TURN_RIGHT 1
 
-#define MAX_SPEED    255
-#define SPEED_CHANGE 5
+#define MAX_SPEED          255
+#define SPEED_CHANGE       5
+#define SPEED_CHANGE_DELAY 10
 
 // How often in milliseconds updates happen
 #define UPDATE_ROBOT_TIME 5
@@ -254,7 +255,7 @@ void updateRobot() {
         }
       }
 
-      delay( 10 );
+      delay( SPEED_CHANGE_DELAY );
     }
 
     if ( GO_REVERSE != goStatus && ( currentSpeedRight > 0 || currentSpeedLeft > 0 ) ) {
