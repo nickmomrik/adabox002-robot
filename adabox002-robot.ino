@@ -28,7 +28,7 @@ String BROADCAST_CMD = String( "AT+GAPDEVNAME=" + BROADCAST_NAME );
 Adafruit_BluefruitLE_SPI ble( BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST );
 
 // Tone for reverse
-#define BEEP 1911
+#define BEEP 4000
 
 // Pins
 #define SPEAKER       A1
@@ -286,10 +286,14 @@ void updateRobot() {
     if ( GO_REVERSE == goStatus && ( GO_REVERSE == currentGoLeft || GO_REVERSE == currentGoRight ) ) {
       currentStopLight = ! currentStopLight;
       digitalWrite( STOP_LIGHT, currentStopLight );
-      //digitalWrite( SPEAKER, currentStopLight );
+      if ( currentStopLight ) {
+        tone( SPEAKER, BEEP );
+      } else {
+        noTone( SPEAKER );
+      }
     } else {
       maybeTurnOffBlink( STOP_LIGHT );
-      //maybeTurnOffBlink( SPEAKER );
+      noTone( SPEAKER );
     }
 
     previousBlinkUpdate = currentTime;
