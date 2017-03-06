@@ -32,8 +32,8 @@ Adafruit_BluefruitLE_SPI ble( BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI
 
 // Pins
 #define SPEAKER       A1
-#define LEFT_BLINKER  9
-#define RIGHT_BLINKER 10
+#define RIGHT_BLINKER 9
+#define LEFT_BLINKER  10
 #define GO_LIGHT      11
 #define STOP_LIGHT    12
 
@@ -199,16 +199,16 @@ void updateRobot() {
         desiredSpeedRight = 0;
       } else {
         if ( TURN_RIGHT == turnStatus ) {
-          desiredSpeedLeft *= 0.5;
-        } else if ( TURN_LEFT == turnStatus ) {
           desiredSpeedRight *= 0.5;
+        } else if ( TURN_LEFT == turnStatus ) {
+          desiredSpeedLeft *= 0.5;
         }
       }
     } else {
       if ( TURN_RIGHT == turnStatus ) {
-        desiredSpeedLeft = 0;
-      } else if ( TURN_LEFT == turnStatus ) {
         desiredSpeedRight = 0;
+      } else if ( TURN_LEFT == turnStatus ) {
+        desiredSpeedLeft = 0;
       } else {
         desiredSpeedLeft = 0;
         desiredSpeedRight = 0;
