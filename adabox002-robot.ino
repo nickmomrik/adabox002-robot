@@ -17,7 +17,7 @@
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 
-// And connect 2 DC motors to port M3 & M4 !
+// Connect 2 DC motors to port M3 & M4 !
 Adafruit_DCMotor *L_MOTOR = AFMS.getMotor( 3 );
 Adafruit_DCMotor *R_MOTOR = AFMS.getMotor( 4 );
 
@@ -59,14 +59,12 @@ void error( const __FlashStringHelper*err ) {
   while ( 1 );
 }
 
-// function prototypes over in packetparser.cpp
+// Function prototypes over in packetparser.cpp
 uint8_t readPacket( Adafruit_BLE *ble, uint16_t timeout );
 float parsefloat( uint8_t *buffer );
 void printHex( const uint8_t * data, const uint32_t numBytes );
 
-// the packet buffer
 extern uint8_t packetbuffer[];
-
 char buf[60];
 
 // Statuses
@@ -86,30 +84,19 @@ int currentLeftBlinker  = LOW;
 int currentRightBlinker = LOW;
 int currentStopLight    = LOW;
 
+// Timing
 unsigned long previousUpdate      = 0;
 unsigned long previousBlinkUpdate = 0;
 
-
-/**************************************************************************/
-/*!
-    @brief  Sets up the HW an the BLE module (this function is called
-            automatically on startup)
-*/
-/**************************************************************************/
 void setup( void ) {
-  Serial.begin( 9600 );
+  // Create with the default frequency 1.6KHz
+  AFMS.begin();
 
-  AFMS.begin();  // create with the default frequency 1.6KHz
-
-  // turn on motors
+  // Turn on motors
   L_MOTOR->setSpeed( 0 );
   R_MOTOR->setSpeed( 0 );
   L_MOTOR->run( RELEASE );
   R_MOTOR->run( RELEASE );
-    
-  Serial.begin( 115200 );
-  Serial.println( F( "Adafruit Bluefruit Robot Controller Example" ) );
-  Serial.println( F( "-----------------------------------------" ) );
   
   pinMode( SPEAKER, OUTPUT );
   
@@ -123,12 +110,11 @@ void setup( void ) {
   digitalWrite( LEFT_BLINKER, LOW );
   digitalWrite( RIGHT_BLINKER, LOW );
 
-  /* Initialize the module */
+  // Initialize the module
   BLEsetup();
 }
 
 void loop( void ) {
-  // read new packet data
   uint8_t len = readPacket( &ble, BLE_READPACKET_TIMEOUT );
 
   readController();
@@ -138,24 +124,6 @@ void loop( void ) {
 
 void updateRobot() {
   unsigned long currentTime = millis();
-
-/*
-  Serial.println( "***************" );
-  Serial.print( "updateRobot " );
-  Serial.println( millis() );
-  Serial.print( "LeftSpeed  " );
-  Serial.print( currentSpeedLeft );
-  Serial.print( " LeftGo  " );
-  Serial.println( currentGoLeft );
-  Serial.print( "RightSpeed " );
-  Serial.print( currentSpeedRight );
-  Serial.print( " RightGo " );
-  Serial.println( currentGoRight );
-  Serial.print( "goStatus " );
-  Serial.print( goStatus );
-  Serial.print( " turnStatus " );
-  Serial.println( turnStatus );
-*/
   
   if ( 0 == currentSpeedLeft && 0 == currentSpeedRight ) {
     digitalWrite( GO_LIGHT, LOW );
@@ -211,13 +179,6 @@ void updateRobot() {
       }
     }
 
-/*
-    Serial.print( "Desired LeftSpeed  " );
-    Serial.println( desiredSpeedLeft );
-    Serial.print( "Desired RightSpeed  " );
-    Serial.println( desiredSpeedRight );
-*/
-
     while ( desiredSpeedLeft != currentSpeedLeft || desiredSpeedRight != currentSpeedRight ) {
       if ( desiredSpeedLeft != currentSpeedLeft ) {
         int newSpeedLeft;
@@ -266,8 +227,6 @@ void updateRobot() {
     previousUpdate = currentTime;
   }
 
-  // turnStatus may not be correct asap due to potential time to slow down and switch directions
-  // maybe a preparing direction flag?
   if ( ( currentTime - previousBlinkUpdate ) >= UPDATE_BLINK_TIME ) {
     if ( TURN_RIGHT == turnStatus ) {
       maybeTurnOffBlink( LEFT_BLINKER );
@@ -307,8 +266,6 @@ void readController() {
     boolean pressed = packetbuffer[3] - '0';
 
     if ( pressed && buttNum != currentButtonPress ) {
-      //Serial.println( buttNum );
-
       currentButtonPress = buttNum;
 
       switch ( buttNum ) {
@@ -362,62 +319,45 @@ void readController() {
 }
 
 void BLEsetup() {
-  Serial.print( F( "Initialising the Bluefruit LE module: " ) );
-
   if ( ! ble.begin( VERBOSE_MODE ) ) {
     error( F( "Couldn't find Bluefruit, make sure it's in CoMmanD mode & check wiring?" ) );
   }
-  Serial.println( F( "OK!" ) );
 
-  /* Perform a factory reset to make sure everything is in a known state */
-  Serial.println( F( "Performing a factory reset: " ) );
+  // Perform a factory reset to make sure everything is in a known state
   if ( ! ble.factoryReset() ) {
     error( F( "Couldn't factory reset" ) );
   }
 
-  //Convert the name change command to a char array
+  // Convert the name change command to a char array
   BROADCAST_CMD.toCharArray( buf, 60 );
 
-  //Change the broadcast device name here!
-  if ( ble.sendCommandCheckOK( buf ) ) {
-    Serial.println( "name changed" );
-  }
+  // Change the broadcast device name here!
+  ble.sendCommandCheckOK( buf );
   delay( 250 );
 
-  //reset to take effect
-  if ( ble.sendCommandCheckOK( "ATZ" ) ) {
-    Serial.println( "resetting" );
-  }
+  // Reset to take effect
+  ble.sendCommandCheckOK( "ATZ" );
   delay( 250 );
 
-  //Confirm name change
+  // Confirm name change
   ble.sendCommandCheckOK( "AT+GAPDEVNAME" );
 
-  /* Disable command echo from Bluefruit */
+  // Disable command echo from Bluefruit
   ble.echo( false );
 
-  Serial.println( "Requesting Bluefruit info:" );
-  /* Print Bluefruit information */
+  // Print Bluefruit information
   ble.info();
 
-  Serial.println( F( "Please use Adafruit Bluefruit LE app to connect in Controller mode" ) );
-  Serial.println( F( "Then activate/use the sensors, color picker, game controller, etc!" ) );
-  Serial.println();
+  // Debug info is a little annoying after this point!
+  ble.verbose( false );
 
-  ble.verbose( false );  // debug info is a little annoying after this point!
-
-  /* Wait for connection */
+  // Wait for connection
   while ( ! ble.isConnected() ) {
     delay( 500 );
   }
 
-  Serial.println( F( "*****************" ) );
-
   // Set Bluefruit to DATA mode
-  Serial.println( F( "Switching to DATA mode!" ) );
   ble.setMode( BLUEFRUIT_MODE_DATA );
-
-  Serial.println( F( "*****************" ) );
 }
 
 int getSpeed() {
