@@ -155,11 +155,6 @@ void updateRobot() {
   Serial.print( " turnStatus " );
   Serial.println( turnStatus );
 */
-
-  if ( GO_NONE == currentGoLeft && GO_NONE == currentGoRight ) {
-    digitalWrite( STOP_LIGHT, HIGH );
-    digitalWrite( GO_LIGHT, LOW );
-  }
   
   if ( 0 == currentSpeedLeft && 0 == currentSpeedRight ) {
     digitalWrite( GO_LIGHT, LOW );
