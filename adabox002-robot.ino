@@ -230,19 +230,24 @@ void updateRobot() {
   }
 
   if ( ( currentTime - previousBlinkUpdate ) >= UPDATE_BLINK_TIME ) {
-    if ( TURN_RIGHT == turnStatus ) {
+    if ( GO_REVERSE == goStatus ) {
       maybeTurnOffBlink( LEFT_BLINKER );
-
-      currentRightBlinker = ! currentRightBlinker;
-      digitalWrite( RIGHT_BLINKER, currentRightBlinker );
-    } else if ( TURN_LEFT == turnStatus ) {
       maybeTurnOffBlink( RIGHT_BLINKER );
-
-      currentLeftBlinker = ! currentLeftBlinker;
-      digitalWrite( LEFT_BLINKER, currentLeftBlinker );
     } else {
-      maybeTurnOffBlink( LEFT_BLINKER );
-      maybeTurnOffBlink( RIGHT_BLINKER );
+      if ( TURN_RIGHT == turnStatus ) {
+        maybeTurnOffBlink( LEFT_BLINKER );
+
+        currentRightBlinker = ! currentRightBlinker;
+        digitalWrite( RIGHT_BLINKER, currentRightBlinker );
+      } else if ( TURN_LEFT == turnStatus ) {
+        maybeTurnOffBlink( RIGHT_BLINKER );
+
+        currentLeftBlinker = ! currentLeftBlinker;
+        digitalWrite( LEFT_BLINKER, currentLeftBlinker );
+      } else {
+        maybeTurnOffBlink( LEFT_BLINKER );
+        maybeTurnOffBlink( RIGHT_BLINKER );
+      }
     }
 
     if ( GO_REVERSE == goStatus && ( GO_REVERSE == currentGoLeft || GO_REVERSE == currentGoRight ) ) {
