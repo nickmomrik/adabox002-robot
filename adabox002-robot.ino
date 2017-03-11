@@ -154,9 +154,9 @@ void updateRobot() {
         desiredSpeedRight = 0;
       } else {
         if ( TURN_RIGHT == turnStatus ) {
-          desiredSpeedRight *= 0.5;
+          desiredSpeedRight *= 0.75;
         } else if ( TURN_LEFT == turnStatus ) {
-          desiredSpeedLeft *= 0.5;
+          desiredSpeedLeft *= 0.75;
         }
       }
     } else if ( GO_REVERSE == goStatus ) {
@@ -165,9 +165,9 @@ void updateRobot() {
         desiredSpeedRight = 0;
       } else {
         if ( TURN_RIGHT == turnStatus ) {
-          desiredSpeedRight *= 0.5;
+          desiredSpeedRight *= 0.75;
         } else if ( TURN_LEFT == turnStatus ) {
-          desiredSpeedLeft *= 0.5;
+          desiredSpeedLeft *= 0.75;
         }
       }
     } else {
