@@ -89,6 +89,8 @@ unsigned long previousUpdate      = 0;
 unsigned long previousBlinkUpdate = 0;
 
 void setup( void ) {
+  Serial.begin( 9600 );
+
   // Create with the default frequency 1.6KHz
   AFMS.begin();
 
