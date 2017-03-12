@@ -7,7 +7,7 @@ Customized robot built with [AdaBox002](https://www.adafruit.com/products/3235).
  * Turning + forward/reverse can be combined.
  * Added a backup beeping buzzer.
  * Added blinker LEDs.
- * Added a stop/go LEDs and the stop LED will blink when going in reverse.
+ * Added stop/go LEDs. The stop LED will blink when going in reverse.
  * Improved the speed/up slow down stepping so the robot doesn't pop a wheelie.
  
 ## Setup
