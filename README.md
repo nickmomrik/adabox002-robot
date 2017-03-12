@@ -8,7 +8,7 @@ Customized robot built with [AdaBox002](https://www.adafruit.com/products/3235).
  * Added a backup beeping buzzer.
  * Added blinker LEDs.
  * Added stop/go LEDs. The stop LED will blink when going in reverse.
- * Improved the speed/up slow down stepping so the robot doesn't pop a wheelie.
+ * Improved the stepping when increasing/decreasing speed so the robot doesn't pop a wheelie or tip over.
  
 ## Setup
 First you'll want to follow [Adafruit's guide for assembling the robot](https://learn.adafruit.com/adabox002/assembling-your-robot) and then also follow their code examples in the guide, which will walk you through setting up some of the required libraries needed for this custom version.
