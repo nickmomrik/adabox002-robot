@@ -17,4 +17,5 @@ Next you can add the necessary wires, LEDs, resistors, and buzzer by following t
  
 ![adabox002-robot Fritzing](./adabox002-robot.png?raw=true "adabox002-robot Fritzing")
 
-I'll have a demo video coming soon...
+## Demo
+View a poor unedited [video on my blog](https://nick.blog/2017/03/12/adabox002-make-robot-friend/).
